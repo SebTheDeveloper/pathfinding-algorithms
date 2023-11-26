@@ -5,6 +5,16 @@ function bfs(
   startNode: number,
   endNode: number
 ): number[] | null {
+  if (!graph || graph.size === 0) {
+    throw new Error('The graph is empty or not defined')
+  }
+  if (!graph.has(startNode)) {
+    throw new Error('Start node does not exist in the graph')
+  }
+  if (!graph.has(endNode)) {
+    throw new Error('End node does not exist in the graph')
+  }
+
   if (startNode === endNode) return [startNode]
 
   const visited = new Set<number>()
@@ -17,19 +27,20 @@ function bfs(
 
   while (queue.length > 0) {
     const currNode = queue.shift()
-    if (!currNode) return null
+    if (currNode === undefined) {
+      throw new Error('Unexpected error: Current node is undefined')
+    }
 
-    if (currNode === endNode) continue
+    if (currNode === endNode) break
 
     const neighbors = graph.get(currNode)
+    if (!neighbors) continue
 
-    if (neighbors) {
-      for (const neighbor of neighbors) {
-        if (!visited.has(neighbor)) {
-          queue.push(neighbor)
-          visited.add(neighbor)
-          parents.set(neighbor, currNode)
-        }
+    for (const neighbor of neighbors) {
+      if (!visited.has(neighbor)) {
+        queue.push(neighbor)
+        visited.add(neighbor)
+        parents.set(neighbor, currNode)
       }
     }
   }
@@ -39,7 +50,7 @@ function bfs(
     endNode,
     parents
   )
-  return shortestPath
+  return shortestPath as number[] | null
 }
 
 function traverseShortestPath(
@@ -56,9 +67,7 @@ function traverseShortestPath(
     shortestPath.unshift(currNode)
 
     const nextParent = parents.get(currNode)
-    if (nextParent === null || nextParent === undefined) {
-      return null
-    }
+    if (!nextParent) return null
 
     currNode = nextParent
   }

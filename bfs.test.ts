@@ -34,6 +34,22 @@ describe('Breadth-First Search Tests', () => {
     // Finds one of the shortest paths from 1 to 8
   })
 
+  it('handles a graph with a single node', () => {
+    const graph = new Map([[1, []]])
+    expect(bfs(graph, 1, 1)).toEqual([1])
+  })
+
+  it('prevents infinite loops in cyclic graphs', () => {
+    const graph = new Map([
+      [1, [2]],
+      [2, [3]],
+      [3, [1, 4]], // Cycle created here
+      [4, [5]],
+      [5, []],
+    ])
+    expect(bfs(graph, 1, 5)).toEqual([1, 2, 3, 4, 5])
+  })
+
   it('returns null if no path exists', () => {
     const graph = new Map([
       [1, [2]],
@@ -45,29 +61,28 @@ describe('Breadth-First Search Tests', () => {
     expect(bfs(graph, 1, 5)).toBeNull()
   })
 
-  it('handles a graph with a single node', () => {
-    const graph = new Map([[1, []]])
-    expect(bfs(graph, 1, 1)).toEqual([1])
-  })
-
-  it('returns null if the start node does not exist', () => {
+  it('throws an error if the start node does not exist', () => {
     const graph = new Map([
       [2, [3]],
       [3, []],
     ])
-    expect(bfs(graph, 1, 3)).toBeNull()
+    expect(() => bfs(graph, 1, 3)).toThrow(
+      'Start node does not exist in the graph'
+    )
   })
 
-  it('returns null if the end node does not exist', () => {
+  it('throws an error if the end node does not exist', () => {
     const graph = new Map([
       [1, [2]],
       [2, []],
     ])
-    expect(bfs(graph, 1, 3)).toBeNull()
+    expect(() => bfs(graph, 1, 3)).toThrow(
+      'End node does not exist in the graph'
+    )
   })
 
-  it('handles an empty graph', () => {
+  it('throws an error if the graph is empty or undefined', () => {
     const graph = new Map()
-    expect(bfs(graph, 1, 2)).toBeNull()
+    expect(() => bfs(graph, 1, 2)).toThrow('The graph is empty or not defined')
   })
 })
