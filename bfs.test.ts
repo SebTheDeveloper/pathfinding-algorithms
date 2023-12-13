@@ -12,7 +12,7 @@ describe('Breadth-First Search Tests', () => {
     expect(bfs(graph, 1, 5)).toEqual([1, 3, 5])
   })
 
-  it('finds the shortest path in a complex graph', () => {
+  it('finds a shortest path in a complex graph', () => {
     const graph = new Map<number, number[]>([
       [1, [2, 3]],
       [2, [4, 5]],
@@ -27,11 +27,13 @@ describe('Breadth-First Search Tests', () => {
     const shortestPath = bfs(graph, 1, 8)
     const expectedPaths = [
       [1, 2, 5, 7, 8],
+      [1, 2, 5, 6, 8],
       [1, 2, 4, 7, 8],
+      [1, 3, 5, 6, 8],
+      [1, 3, 5, 7, 8]
     ]
 
     expect(expectedPaths).toContainEqual(shortestPath)
-    // Finds one of the shortest paths from 1 to 8
   })
 
   it('handles a graph with a single node', () => {
